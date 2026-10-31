@@ -848,3 +848,248 @@ Fred    = Ops ✅ + his own personal extra 🎯
 ## Memory trick
 **"G comes before I"** 🔤 (just like in the alphabet)
 → Set up **G**roups first, use **I**nline policies only when needed.
+
+# AWS – IAM Policy Structure
+
+## The big idea 💡
+A policy says: **WHO** can do **WHAT** to **WHICH thing**, and **WHEN**.
+
+You **don't** need to write these from scratch. AWS has **ready-made policies**. But it helps to understand them!
+
+---
+
+## Example policy (JSON)
+
+```json
+{
+  "Version": "2012-10-17",
+  "Id": "MyS3Policy",
+  "Statement": [
+    {
+      "Sid": "AllowUploadDownload",
+      "Effect": "Allow",
+      "Principal": { "AWS": "arn:aws:iam::123456789012:user/Alice" },
+      "Action": ["s3:GetObject", "s3:PutObject"],
+      "Resource": "arn:aws:s3:::my-bucket/*",
+      "Condition": { "IpAddress": { "aws:SourceIp": "203.0.113.0/24" } }
+    }
+  ]
+}
+```
+
+> **Jargon buster**
+> - **ARN** = Amazon Resource Name, an **address** for something in AWS (like a postcode 📮).
+> - **IP address** = a computer's **address** on the internet.
+
+---
+
+## Part 1: The top 🔝
+
+| Part | What it means | Needed? |
+|------|---------------|---------|
+| **Version** | Policy language date. **Always `2012-10-17`**. Just copy it. | ✅ Always |
+| **Id** | A **name** for the policy. | ⚪ Optional |
+| **Statement** | The **main part**: the actual rules. Can have **one or more**. | ✅ Always |
+
+## Part 2: Inside a Statement 📋
+
+| Part | Simple meaning | In the example |
+|------|----------------|----------------|
+| **Sid** | A **label** for the statement 🏷️ | `AllowUploadDownload` |
+| **Effect** | **Allow ✅** or **Deny ❌**. That's it. | `Allow` |
+| **Principal** | **WHO** it applies to 👤 (user, role or account) | Alice |
+| **Action** | **WHAT** they can do ⚙️ | `GetObject` = **download** ⬇️, `PutObject` = **upload** ⬆️ |
+| **Resource** | **WHICH thing** it's for 🪣 | the S3 bucket `my-bucket` |
+| **Condition** | **WHEN** it works ⏰ (optional) | Only from a certain IP address |
+
+---
+
+## Diagram
+
+```
+📜 POLICY
+ ├─ Version   → always "2012-10-17"
+ ├─ Id        → name (optional)
+ └─ Statement
+     ├─ Sid        🏷️ label
+     ├─ Effect     ✅ / ❌
+     ├─ Principal  👤 WHO
+     ├─ Action     ⚙️ WHAT
+     ├─ Resource   🪣 WHICH thing
+     └─ Condition  ⏰ WHEN (optional)
+```
+
+**Read it as a sentence:**
+> ✅ **Allow** 👤 **Alice** to ⚙️ **upload & download** in 🪣 **my-bucket**, ⏰ **only from this IP address**.
+
+---
+
+## Key takeaway
+> A policy has a **Version**, an optional **Id**, and **Statements**. Each statement says **Allow/Deny**, **who**, **what**, **which resource** and (optionally) **when**.
+
+## Memory tricks
+- **Top of a policy = V.I.S** → **V**ersion, **I**d, **S**tatement
+  → "**V**ery **I**mportant **S**tuff" ⭐
+- **Inside a statement = S.E.P.A.R.C** → **S**id, **E**ffect, **P**rincipal, **A**ction, **R**esource, **C**ondition
+  → "**S**ome **E**lephants **P**aint **A**rt **R**eally **C**arefully" 🐘🎨
+
+  # AWS – Password Policy 🔑
+
+- A **password policy** makes everyone use **strong passwords**. This works for any login, not just AWS.
+- **Length:** at least **8–12 characters**. Longer = harder to crack.
+- **Mix it up:** **UPPERCASE**, **lowercase**, **numbers** and **symbols** (e.g. `@`, `!`).
+- **Changes:** users can **change their own** password, and passwords **expire** after a set time.
+- **No reusing** old passwords (no `password123` over and over ❌).
+- **At work (production / big companies):** you'll mostly use **SSO (Single Sign-On)**, one secure login for everything, instead of passwords.
+- **Personal account:** use a **strong password + MFA** 📱.
+
+**Memory trick: L.M.E.N.S** → **L**ength, **M**ix, **E**xpire, **N**o reuse, **S**SO
+→ "Look through a strong **LENS** 🔍... with an **M** in it!"
+
+
+# AWS – MFA (Multi-Factor Authentication) 📱
+
+- **MFA** = logging in with **2 things** instead of 1:
+  - **Something you KNOW** → your password 🔑
+  - **Something you HAVE** → a one-time code from an app on your phone 📱
+- **Why?** If a hacker steals your password, they **still can't get in** without your phone.
+- **Without MFA**, a hacker could **delete your stuff**, **change settings**, or **run Bitcoin mining** on your account → **huge bill 💸**.
+- **Set it up on your root account first** 👑 (it has full access to everything), then on all IAM users.
+- Quick to set up, **huge security boost** 🛡️.
+
+**Memory trick: "Know + Have = Safe" 🔑 + 📱 = 🛡️**
+
+# AWS – MFA Device Options 🔐
+
+- **1. Virtual MFA device** 📱: an **app on your phone** (e.g. Google Authenticator, Microsoft Authenticator).
+  - Gives you a **one-time code**. **Free**, and one phone can hold **many accounts**. Best for most people ✅
+- **2. U2F Security Key** 🔌: a **USB stick** you plug in (e.g. **YubiKey**).
+  - **No code to type**, just plug in and tap. One key works for **many accounts**.
+- **3. Hardware Key Fob** ⌚: a small **physical gadget** that shows a **new code every 30 seconds**.
+  - Old school. Good where **phones aren't allowed**.
+- **4. Hardware Key Fob for AWS GovCloud** 🏛️: a special fob for **AWS GovCloud (US)**, the Region for **US government** work with **high security** needs.
+- **Main point:** any option is fine. Just **USE MFA!**
+
+**Memory trick: V.U.H.G** → **V**irtual, **U**2F, **H**ardware fob, **G**ovCloud fob
+→ "**V**ery **U**seful **H**ardware **G**adgets" 🛠️
+
+# AWS – 3 Ways to Access AWS 🚪
+
+- **1. AWS Management Console** 🖥️: the **website**.
+  - Log in with **password + MFA**. Good for doing things **by clicking** (nicknamed **"ClickOps"**).
+- **2. AWS CLI (Command Line Interface)** ⌨️: type **commands in your terminal**.
+  - e.g. `aws ec2 run-instances`. **Faster**, and good for **automating** tasks.
+- **3. AWS SDK (Software Development Kit)** 👩‍💻: lets **your code / apps** talk to AWS **automatically**.
+- **CLI + SDK use Access Keys**, not passwords:
+  - **Access Key ID** = like a **username** 👤
+  - **Secret Access Key** = like a **password** 🔑
+- ⚠️ **NEVER share access keys or put them in your code / GitHub.** Hackers could take over your account (Bitcoin mining = huge bill 💸).
+- **Rule:** Console → **password + MFA**. Only use access keys **when you need to**.
+
+**Memory trick: C.C.S** → **C**onsole, **C**LI, **S**DK
+→ "**C**lick, **C**ommand, **S**cript" 🖱️⌨️📜
+
+# AWS – Access Keys (What They Look Like) 🔑
+
+- Access keys come in a **pair**, and they work together for the **CLI / SDK**:
+  - **Access Key ID** = **username** 👤 → e.g. `AKIAIOSF••••••••••••` (usually starts with **AKIA**)
+  - **Secret Access Key** = **password** 🔑 → e.g. `wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY`
+  - *(These are AWS's official fake examples, so they won't work.)*
+- ⚠️ **NEVER share them.** Anyone with your keys can do **whatever your permissions allow**, including **deleting things**.
+- **Think your keys are leaked?** Straight away, either:
+  - make them **Inactive** ⛔, or
+  - **Rotate** them 🔄 (create **new** keys, then **disable the old** ones).
+- **Best practice:** rotate keys **regularly**, even if nothing's wrong.
+- Lots of people get hacked by **accidentally pushing keys to GitHub**, so be careful!
+
+**Memory trick: "Hide it, Don't Ride it, Rotate it"** 🙈🚫🔄
+→ Keep it secret, never share it, change it regularly.
+
+# AWS – CLI (Command Line Interface) ⌨️
+
+- The **AWS CLI** lets you control AWS by **typing commands in your terminal**, so you don't need to log in to the website.
+- It talks directly to AWS's **public APIs** (the "doors" into each service 🚪).
+- You can do **almost anything** the console can: manage **S3 buckets** 🪣, launch **EC2 instances** 💻, etc.
+- **Big win:** you can write **scripts** to **automate** jobs instead of clicking around (**ClickOps**) 🤖
+- **Example commands:**
+  - `aws s3 cp myfile.txt s3://my-bucket/` → **upload (copy)** a file to a bucket ⬆️
+  - `aws s3 ls` → **list** your buckets 📋
+- It's **open source** (free, and anyone can see the code on GitHub: `github.com/aws/aws-cli`).
+
+> **Jargon buster:** **API** = a way for programs to talk to a service.
+
+**Memory trick: "cp = CoPy, ls = LiSt"** 📄➡️🪣 | 📋
+
+# AWS – SDK (Software Development Kit) 👩‍💻
+
+- The **SDK** lets **your code** talk to AWS, using the **programming language you already use**.
+- It's a set of **ready-made libraries** 📚 for each language: **Python, JavaScript / Node.js, PHP, Go, C++** and more.
+- You can use AWS **inside your app**, e.g. **upload files to S3** 🪣 or **start EC2 instances** 💻, with just a few lines of code.
+- Also works for **mobile** (Android 🤖, iOS 🍎) and **IoT devices** (e.g. Arduino, embedded C).
+- **Python's SDK is called Boto3** 🐍:
+  ```python
+  import boto3
+  s3 = boto3.client("s3")
+  s3.upload_file("myfile.txt", "my-bucket", "myfile.txt")
+  ```
+- **Fun fact:** the **AWS CLI is built on the AWS Python SDK**, so if you've used the CLI, you've already used the SDK! 😄
+
+> **Jargon buster:** **Library** = pre-written code you can reuse so you don't start from scratch.
+
+**Memory trick: CLI = you type 🧑‍💻, SDK = your code types 🤖**
+→ **Boto3** = "**Bo**ss **To**ol for Python" 🐍
+
+# AWS – Installing & Setting Up the CLI (Mac) 🍎⌨️
+
+- **1. Install:** Google **"install AWS CLI"** → AWS page → **macOS** → **GUI installer** → download, then click Continue/Agree → enter your Mac password → Close.
+- **2. Check it worked:** open **Terminal** (`Cmd + Space` → "Terminal") and type:
+  - `aws --version` → it shows a version (e.g. `aws-cli/2.17...`) ✅
+- **3. Create an access key** (for your **IAM user**, ❌ **NOT the root account**):
+  - Console → **IAM** → **Users** → click your user → **Security credentials** → **Create access key** → choose **CLI** → tick "I understand" → **Create**.
+- **4. Connect the CLI to your account:**
+  - `aws configure`, then enter:
+    - **Access Key ID** 👤 (paste)
+    - **Secret Access Key** 🔑 (paste)
+    - **Region** → `eu-west-2` (London) 🇬🇧
+    - **Output format** → `json`
+- **5. Test you're logged in:**
+  - `aws sts get-caller-identity` → shows **who you're logged in as** ✅
+  - `aws iam list-users` → lists your **IAM users** 👥
+- **Main point:** anything you can do in the **console**, you can do in the **CLI**. A user made in the console **shows up in the CLI** too.
+
+**Memory trick: I.C.K.C.T** → **I**nstall, **C**heck, **K**ey, **C**onfigure, **T**est
+→ "**I** **C**an **K**ick **C**ode **T**oday" ⚽
+
+# AWS – IAM Roles for Services 🎭
+
+- Sometimes an **AWS service needs to use another AWS service** for you.
+  - e.g. **EC2** 💻 needs to **read from S3** 🪣
+  - e.g. **Lambda** ⚡ needs to **write logs to CloudWatch** 📊
+- ❌ **Don't** put your access keys or passwords inside the service (that's called **hard-coding**).
+- ✅ **Use an IAM Role** instead. It gives the service **temporary access**, with **no long-term keys** needed.
+- **Common examples:**
+  - **EC2 instance role** → lets EC2 use **S3, DynamoDB**, etc.
+  - **Lambda function role** → lets Lambda use other AWS services
+  - **CloudFormation role** → lets CloudFormation **build resources** across many services 🏗️
+- You **control exactly what each service is allowed to do**.
+
+> **Jargon buster:** **Hard-coding** = typing secret details straight into code or settings (unsafe ⚠️).
+
+**Memory trick: "Role = a temporary key for a service" 🎭🔑**
+→ **E.L.C** → **E**C2, **L**ambda, **C**loudFormation = "**E**very **L**ittle **C**omputer needs a role" 💻
+
+# AWS – IAM Security Tools 🛡️
+
+- **1. IAM Credentials Report** 📋 (**whole account** level)
+  - A **list of ALL users** and the state of their logins.
+  - Shows: who has **access keys** 🔑, who uses **MFA** 📱, and when people **last changed their password**.
+  - Gives you the **big picture** 🌍.
+- **2. IAM Access Advisor** 🔍 (**one user** level)
+  - Shows **what services a user is allowed to use** and **when they last used them**.
+  - Not used in months? → **remove that permission** ✂️
+  - Good for **fine-tuning** one person's access.
+- Both tools help you follow **least privilege** (only give what's needed 🔒).
+
+**Memory trick: Report = big picture 🌍, Advisor = close-up 🔍**
+→ "**R**eport is **R**oom-wide, **A**dvisor is **A**bout one person" 👥 vs 👤
+
