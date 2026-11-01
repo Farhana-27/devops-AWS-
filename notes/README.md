@@ -415,14 +415,6 @@ Any app where **speed really matters**:
 
 ---
 
-## Key takeaway
-> **Edge locations** are **400+ small AWS sites worldwide** that keep **copies of content near users**. This **cuts latency (delay)** so websites, videos and games load **faster**.
-
-## Memory tricks
-- **The numbers = "4-9-4"** → **4**00+ locations, **9**0+ cities, **4**0+ countries 📞 (like a phone number!)
-- **EDGE = "Every Delivery Gets Earlier"** 🚚💨
-- **Edge location = local warehouse 📦**: stuff is kept close to you, so it arrives faster than from HQ.
-
 # AWS – Console Intro: Global vs Region-Scoped Services
 
 ## The AWS Console 🖥️
