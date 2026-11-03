@@ -995,3 +995,50 @@ You **don't** need to write these from scratch. AWS has **ready-made policies**.
 **Memory trick: Report = big picture 🌍, Advisor = close-up 🔍**
 → "**R**eport is **R**oom-wide, **A**dvisor is **A**bout one person" 👥 vs 👤
 
+# AWS – IAM Best Practices ✅
+
+- Only use the **root account** to set up the account, then **lock it away** 🔒
+- **1 person = 1 AWS user**. Never share logins.
+- Put users in **groups** and give permissions to the **groups**.
+- Use a **strong password policy**.
+- **Turn on MFA** for everyone 📱
+- Use **IAM roles** for services like EC2 and Lambda, never hard-coded keys.
+- Use **access keys** only for the CLI/SDK, and keep them secret 🔑
+- **Check permissions regularly** with the **Credentials Report** and **Access Advisor**.
+- **Never share** IAM users or access keys.
+
+# AWS – IAM Summary 📌
+
+- **Users** 👤: one per real person, each with their own console password.
+- **Groups** 👥: hold users only, no groups inside groups. Give permissions to groups.
+- **Policies** 📜: JSON rules saying who can do what.
+- **Roles** 🎭: give AWS services (e.g. EC2, Lambda) permission to use other AWS services.
+- **Security** 🔒: strong password policy + MFA.
+- **CLI** ⌨️: manage AWS with terminal commands.
+- **SDK** 👩‍💻: manage AWS from code.
+- **Access keys** 🔑: used by the CLI, SDK and Terraform. Keep them secret.
+- **Audit tools** 🔍: Credentials Report + Access Advisor, to check and tighten access.
+
+# AWS – Intro to Compute 💻
+
+- **Compute** = the computer power that runs your apps.
+- **On-prem** = you own physical servers. **Cloud** = AWS handles the hardware, and you just use it.
+- **1. EC2** 🖥️: virtual machines (VMs). Full control over the OS and software.
+- **2. Containers** 📦: your app + everything it needs, packed into one neat bundle.
+  - **ECS**: Amazon's own way to run containers.
+  - **EKS**: runs containers using **Kubernetes**.
+- **3. Lambda (serverless)** ⚡: no servers to manage. Code runs when triggered, scales itself, and you pay only for the time it runs.
+- **4. HA & Scalability** 📈: **High Availability** (always up) + **Scalability** (grows with demand). Works across EC2, containers and Lambda.
+
+# AWS – What is EC2? 🖥️
+
+- **EC2** = **Elastic Compute Cloud**: you **rent virtual machines** from AWS.
+- It's **IaaS** (**Infrastructure as a Service**): AWS gives you the computer, and you set it up.
+- Very popular: **flexible**, **scale up or down**, and **pay only for what you use** 💷.
+- **What EC2 lets you do:**
+  - **Rent VMs** 💻: pick the OS and set them up how you like.
+  - **EBS (Elastic Block Store)** 💾: a **hard drive** for your EC2.
+  - **ELB (Elastic Load Balancer)** ⚖️: **shares traffic evenly** across your EC2s so none gets overloaded.
+  - **ASG (Auto Scaling Group)** 📈: **adds EC2s** when traffic goes **up** (scale out) and **removes them** when it goes **down** (scale in).
+- EC2 is a **key foundation** of cloud computing.
+
