@@ -1042,3 +1042,70 @@ You **don't** need to write these from scratch. AWS has **ready-made policies**.
   - **ASG (Auto Scaling Group)** 📈: **adds EC2s** when traffic goes **up** (scale out) and **removes them** when it goes **down** (scale in).
 - EC2 is a **key foundation** of cloud computing.
 
+# AWS – EC2 Configuration Options ⚙️
+
+- **OS** 🖥️: Linux, Windows, macOS and more. Pick what your app needs.
+- **CPU / cores** 🧠: how much processing power you need (more for heavy work like machine learning).
+- **Memory (RAM)** 📊: more RAM = handles more data and bigger apps smoothly.
+- **Storage** 💾:
+  - **EBS**: a hard drive attached to one EC2.
+  - **EFS**: shared storage that many EC2s can use.
+  - **Instance store**: very fast, but **temporary**. The data is **lost** when the instance stops ⚠️
+- **Networking** 🌐: choose network speed, plus an optional **public IP** so the internet can reach it.
+- **Security Groups (SGs)** 🛡️: a **firewall** that controls who and what traffic can get in.
+- **User Data (bootstrap script)** 📜: a script that **runs automatically the first time** the EC2 starts (install software, run updates).
+- **Size it right**: too small = slow 🐢, too big = wasting money 💸
+
+# AWS – EC2 User Data 📜
+
+- **User Data** = a **script that runs automatically** when an EC2 starts for the **first time**.
+- This is called **bootstrapping** (setting up the machine at launch) 🚀
+- **What it can do:**
+  - **Update** the system with the latest patches 🔄
+  - **Install software** (e.g. Nginx, Apache) 📦
+  - **Download files** (packages, config files, app code) ⬇️
+- It only **runs once**, at first launch. It won't run again unless you stop the instance, change the user data and start it again.
+- It runs as **root** 👑, with **full control** of the machine, so be careful what you put in it ⚠️
+- **DevOps win:** set up **many EC2s automatically** with no manual logging in 🤖
+
+# AWS – Launching & Connecting to an EC2 Instance 🚀
+
+## 1. Launch the instance 🖥️
+- Log in to AWS → **EC2** → **Instances** → **Launch instance**.
+- **Name:** give it a name (e.g. `my-ec2`).
+- **Image (AMI):** **Amazon Linux**, 64-bit. Keep the defaults.
+- **Instance type:** `t2.micro` (**free tier** ✅).
+
+## 2. Create a key pair 🔑
+- Click **Create key pair** → give it a name → type **RSA** → format **.pem** → **Create**.
+- It downloads to your **Downloads** folder. Move it to the folder you'll work from:
+  - `mv ~/Downloads/my-key.pem .`
+- This key is how you **log in** to the EC2 later.
+
+## 3. Network settings 🌐
+- **Create security group** ✅
+- **Auto-assign public IP** → **Enable** (so you can reach it from the internet).
+- **Allow SSH traffic** → from **My IP** only (safer than "Anywhere") 🛡️
+- Leave everything else as default → **Launch instance**.
+- Wait until it goes from **Pending** ⏳ → **Running** ✅
+
+## 4. Connect with SSH 🔌
+- Copy the instance's **Public IP**.
+- In Terminal (in the folder with your key):
+  - `ssh -i my-key.pem ec2-user@<PUBLIC-IP>`
+  - Type `yes` when asked.
+- `ec2-user` = the **default user** for Amazon Linux.
+
+## 5. Fix the permissions error ⚠️
+- First try = **permissions error** (the key is too "open").
+- Check with: `ls -la`
+- Fix it: `chmod 400 my-key.pem` (makes the key **read-only, just for you**).
+- Run the `ssh` command again → **you're in!** 🎉
+- Test it: `ls`, `touch test.txt`
+
+## 6. Clean up 🧹 (so you don't get charged 💸)
+- `exit` to leave the EC2.
+- AWS → select instance → **Instance state** → **Terminate**.
+- **Key Pairs** → **Actions** → **Delete** → type `delete`.
+- Delete the local key file: `rm my-key.pem`
+
