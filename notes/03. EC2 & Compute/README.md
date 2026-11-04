@@ -168,3 +168,58 @@ echo "<h1>Hello from $(hostname)</h1>" > /var/www/html/index.html   # create the
 - **Stop:** Instance state → Stop instance. The website goes down, and you stop paying for the server while it's off.
 - **Start:** Instance state → Start instance. ⚠️ **You get a new public IP**, so the old address no longer works. Use the new one.
 - **Terminate:** Deletes the instance permanently. It's kept in this video for later demos.
+
+# EC2 Purchasing Options
+
+- **On-Demand:** Pay by the second, with no commitment. Flexible but not the cheapest.
+  - *Use for:* short-term or unpredictable work, such as testing a new app or a temporary project.
+
+- **Reserved Instances (1 or 3 years):** A discount in exchange for committing to a term. The longer the term, the cheaper it is.
+  - **Standard:** the biggest discount, for steady, predictable workloads.
+  - **Convertible:** lets you change instance type over time, for a smaller discount.
+  - *Use for:* production apps that will run for a long time.
+
+- **Savings Plans (1 or 3 years):** A discount for committing to a set amount of usage. More flexible than Reserved because it works across instance types and regions.
+  - *Use for:* long-term savings without being tied to one instance type.
+
+- **Spot Instances:** Unused AWS capacity at a big discount. ⚠️ AWS can take the instance back at any time.
+  - *Use for:* work that can be interrupted, such as batch processing or data analysis.
+
+- **Dedicated Hosts:** You rent a whole physical server, with full control and visibility of the hardware.
+  - *Use for:* compliance, or software licences tied to a specific server.
+
+- **Dedicated Instances:** Your instances run on hardware that no other AWS customer shares, but you don't control the physical server.
+  - *Use for:* security or compliance needs that require isolated hardware.
+
+- **Capacity Reservations:** Guarantees capacity in a specific Availability Zone (AZ) for as long as you need it.
+  - *Use for:* critical workloads that must run in a certain AZ, especially at busy times.
+
+## Quick rule of thumb
+
+| Situation | Best option |
+|---|---|
+| Testing or experimenting | On-Demand |
+| Steady, long-term workload | Reserved Instances or Savings Plans |
+| Cheap work that can be interrupted | Spot |
+| Compliance or licensing | Dedicated Host or Dedicated Instance |
+| Must have capacity in one AZ | Capacity Reservation |
+
+# EC2 Purchasing Options in the Console
+
+The EC2 console's left menu has a page for each purchasing option:
+
+- **Spot Requests:** Request spare capacity cheaply.
+  - To create a **Spot Fleet request**, you choose the AMI, the capacity you need, the network settings, the instance type requirements and an allocation strategy.
+  - AWS then shows you an **estimated price** before you commit.
+- **Savings Plans:** Browse and compare the plans available.
+- **Reserved Instances:** Buy one by choosing the instance type, term and payment option.
+- **Dedicated Hosts:** Allocate a whole physical server for yourself.
+- **Capacity Reservations:** Reserve capacity in a specific AZ.
+
+## Finding instance types
+
+- Go to **EC2 → Instance Types** to see every type, such as `t2`, `t3`, `m3` and `m7`.
+- Use the **search bar** to filter, for example type `m3` for one type or `m` for the whole general-purpose family.
+- **Instance type finder:** describe your workload (for example machine learning and high performance), and AWS suggests suitable instance types with their details.
+- Once you've picked a type, use it when you **launch an instance**.
+
