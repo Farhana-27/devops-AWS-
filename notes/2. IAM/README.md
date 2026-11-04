@@ -518,4 +518,4 @@ You **don't** need to write these from scratch. AWS has **ready-made policies**.
 - **CLI** ⌨️: manage AWS with terminal commands.
 - **SDK** 👩‍💻: manage AWS from code.
 - **Access keys** 🔑: used by the CLI, SDK and Terraform. Keep them secret.
-- **Audit tools** 🔍: Credentials Report + Access Advisor, to check and tighten access.
+- **Audit tools** 🔍: Credentials Report + Access Advisor, to check and tighten access. 
