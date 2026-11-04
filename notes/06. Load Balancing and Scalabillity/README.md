@@ -550,4 +550,29 @@ The ALB passes the client's details along in special **HTTP headers**:
   - 🔍 **Security auditing and logging**
 - ⚙️ Make sure your **app is set up to read these headers**, or your logs will only show the ALB's IP.
 
+## Network Load Balancer (NLB)
+
+- **What it is:** an AWS load balancer built for **extreme speed and huge amounts of traffic**.
+- **Works at Layer 4**, the transport layer. It handles **TCP and UDP** traffic and doesn't look inside requests the way an ALB does.
+
+**Key features**
+
+| Feature | What it means |
+|---|---|
+| **Very low latency** | Responds much faster than an Application Load Balancer (ALB) |
+| **Massive scale** | Handles **millions of requests per second** |
+| **One static IP per Availability Zone (AZ)** | The IP address **never changes**, which is handy when clients need to **whitelist** (allow) a fixed IP |
+| **Elastic IPs** | You can attach your own Elastic IPs, so you keep the **same address** even when you scale or change your setup |
+
+**When to use an NLB instead of an ALB**
+
+- Apps where **every millisecond counts**: **financial trading**, **online gaming**, **real-time communication** like VoIP (internet calls).
+- Apps using **TCP or UDP protocols**, for example **DNS**.
+- When clients need to connect to a **fixed IP address**.
+
+**Example:** a **real-time trading platform** uses an NLB so users get data **instantly** and the system stays stable under **heavy traffic**.
+
+⚠️ **Cost:** NLBs are **not included in the AWS Free Tier**, so you'll be charged for using one.
+
+**In one line:** an NLB is AWS's fastest load balancer. It handles TCP/UDP at Layer 4 with static IPs, built for high-speed, high-traffic apps.
 
